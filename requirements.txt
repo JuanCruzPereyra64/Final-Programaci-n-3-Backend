@@ -42,3 +42,4 @@ pytest-asyncio==0.21.1
 httpx==0.25.1
 python-multipart
 python-multipart
+cloudinary==1.36.0

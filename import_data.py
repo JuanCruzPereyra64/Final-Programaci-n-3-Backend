@@ -14,11 +14,16 @@ logger = logging.getLogger(__name__)
 def import_data():
     db = SessionLocal()
     try:
-        if not os.path.exists("data.json"):
-            logger.error("data.json not found. Please run export_data.py first.")
+        file_path = "data.json"
+        if not os.path.exists(file_path):
+            # Try parent directory
+            file_path = os.path.join("..", "data.json")
+            
+        if not os.path.exists(file_path):
+            logger.error("data.json not found in current or parent directory. Please run export_data.py first.")
             return
 
-        with open("data.json", "r", encoding="utf-8") as f:
+        with open(file_path, "r", encoding="utf-8") as f:
             data = json.load(f)
 
         logger.info("Starting data import...")

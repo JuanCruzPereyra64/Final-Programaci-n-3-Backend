@@ -2,37 +2,36 @@ import os
 import shutil
 from fastapi import APIRouter, UploadFile, File, HTTPException, Form
 from fastapi.responses import JSONResponse
+import cloudinary
+import cloudinary.uploader
 
 router = APIRouter()
 
-# Path to save images (Frontend public folder)
-UPLOAD_DIR = os.path.join(os.getcwd(), "frontend", "public", "Imagenes producto")
+# Configure Cloudinary
+cloudinary.config( 
+  cloud_name = os.getenv("CLOUDINARY_CLOUD_NAME"), 
+  api_key = os.getenv("CLOUDINARY_API_KEY"), 
+  api_secret = os.getenv("CLOUDINARY_API_SECRET") 
+)
 
 @router.post("/upload")
 async def upload_image(file: UploadFile = File(...), product_name: str = Form(...), index: int = Form(...)):
     try:
-        # Ensure directory exists
-        os.makedirs(UPLOAD_DIR, exist_ok=True)
-        
-        # Get extension
-        file_ext = os.path.splitext(file.filename)[1]
-        
-        # Sanitize product name for filename
+        # Sanitize product name for filename (optional, Cloudinary handles naming but good for folder organization)
         safe_name = "".join([c for c in product_name if c.isalnum() or c in (' ', '-', '_')]).strip()
         safe_name = safe_name.replace(" ", "_")
         
-        # Create new filename: Product_Name_1.jpg
-        new_filename = f"{safe_name}_{index}{file_ext}"
+        # Upload to Cloudinary
+        # public_id allows us to control the filename on Cloudinary
+        result = cloudinary.uploader.upload(
+            file.file, 
+            public_id = f"products/{safe_name}_{index}",
+            overwrite = True,
+            resource_type = "image"
+        )
         
-        # Create file path
-        file_path = os.path.join(UPLOAD_DIR, new_filename)
-        
-        # Save file
-        with open(file_path, "wb") as buffer:
-            shutil.copyfileobj(file.file, buffer)
-            
-        # Return URL relative to public folder
-        image_url = f"/Imagenes producto/{new_filename}"
+        # Get the secure URL from Cloudinary response
+        image_url = result.get("secure_url")
         
         return JSONResponse(content={"url": image_url}, status_code=200)
     except Exception as e:
