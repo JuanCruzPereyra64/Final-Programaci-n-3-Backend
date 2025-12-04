@@ -16,7 +16,7 @@ class BaseRepositoryImpl(BaseRepository[T], Generic[T]):
         return self.db.query(self.model).offset(skip).limit(limit).all()
 
     def get_by_id(self, id: int) -> Optional[T]:
-        return self.db.query(self.model).filter(self.model.id == id).first()
+        return self.db.query(self.model).filter(self.model.id_key == id).first()
 
     def create(self, entity: T) -> T:
         self.db.add(entity)

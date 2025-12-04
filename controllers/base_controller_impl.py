@@ -56,7 +56,7 @@ class BaseControllerImpl(BaseController):
         ):
             """Get a single record by ID."""
             service = self.service_factory(db)
-            return service.get_one(id_key)
+            return service.get_by_id(id_key)
 
         @self.router.post("/", response_model=self.schema, status_code=status.HTTP_201_CREATED)
         async def create(
