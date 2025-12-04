@@ -5,3 +5,7 @@ class CategoryModel(base):
     __tablename__ = 'categories'
     id_key = Column(Integer, primary_key=True, index=True)
     name = Column(String)
+
+    @property
+    def id(self):
+        return self.id_key

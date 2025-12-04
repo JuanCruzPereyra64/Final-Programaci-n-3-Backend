@@ -4,7 +4,7 @@ from models.base_model import base
 
 class ProductModel(base):
     __tablename__ = 'products'
-    id_key = Column("id", Integer, primary_key=True, index=True)
+    id_key = Column(Integer, primary_key=True, index=True)
     name = Column(String)
     description = Column(String)
     price = Column(Float)
@@ -15,3 +15,7 @@ class ProductModel(base):
     category_id = Column(Integer, ForeignKey('categories.id_key'), index=True)
     
     category = relationship("CategoryModel")
+
+    @property
+    def id(self):
+        return self.id_key

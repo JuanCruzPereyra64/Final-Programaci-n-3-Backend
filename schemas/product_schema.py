@@ -8,3 +8,5 @@ class ProductSchema(BaseSchema):
     stock: int
     category_id: int
     image_url: Optional[str] = None
+    sizes: Optional[str] = None
+    is_active: bool = True

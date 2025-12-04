@@ -4,6 +4,13 @@ from sqlalchemy.orm import Session
 from config.database import SessionLocal
 from models.category import CategoryModel
 from models.product import ProductModel
+# Import other models to ensure registry is complete and avoid FK errors
+from models.order_detail import OrderDetailModel
+from models.order import OrderModel
+from models.client import ClientModel
+from models.address import AddressModel
+from models.bill import BillModel
+from models.review import ReviewModel
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
